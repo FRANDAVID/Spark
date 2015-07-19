@@ -1,17 +1,13 @@
-package cn.gridx.spark.examples
+package cn.gridx.spark.examples.io
 
-import com.esotericsoftware.kryo.Kryo
 import com.sematext.hbase.wd.RowKeyDistributorByHashPrefix.OneByteSimpleHash
-import com.sematext.hbase.wd.{ WdTableInputFormat, RowKeyDistributorByHashPrefix}
-import org.apache.hadoop.hbase.{KeyValue, HBaseConfiguration}
-import org.apache.hadoop.hbase.client.{ Result, Put, HTable}
+import com.sematext.hbase.wd.{RowKeyDistributorByHashPrefix, WdTableInputFormat}
+import org.apache.hadoop.hbase.client.{HTable, Put, Result}
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
-import org.apache.spark.serializer.{KryoRegistrator}
-
-
-import org.apache.spark.{SparkContext, SparkConf}
+import org.apache.hadoop.hbase.{HBaseConfiguration, KeyValue}
+import org.apache.spark.{SparkConf, SparkContext}
 
 /**
  * Created by tao on 7/6/15.
@@ -21,12 +17,10 @@ import org.apache.spark.{SparkContext, SparkConf}
 object TestHBaseWdPhoenix {
     def FamilyF = "F".getBytes
     def TableName = "sentiments:salted"
-    // 注意不能写成cn.gridx.spark.examples.TestHBaseWdPhoenix.CustomKryoRegistrator
-    def CustomKryoSerializerName = "cn.gridx.spark.examples.TestHBaseWdPhoenix$CustomKryoRegistrator"
 
     def main(args:Array[String]): Unit = {
         // 先往HBase表中写入一些数据
-        write()
+        //write()
         
         // 然后用Spark来读取这些数据
         read()
@@ -105,7 +99,6 @@ object TestHBaseWdPhoenix {
         val sparkConf = new SparkConf()
         sparkConf.setAppName("Spark read from HBaseWD")
         sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-        sparkConf.set("spark.kryo.registrator", CustomKryoSerializerName)
 
         val sparkContext = new SparkContext(sparkConf)
 
@@ -150,17 +143,5 @@ object TestHBaseWdPhoenix {
         }
 
         sparkContext.stop
-    }
-
-    /**
-     * 运行Spark应用时，需要用Kryo来对`ImmutableBytesWritable`进行序列化
-     *
-     * 注意：本类经过Scala编译后的文件名是`TestHBaseWdPhoenix$CustomKryoRegistrator.class`
-     * 所以，注册时本类的全名应该是`cn.gridx.spark.examples.TestHBaseWdPhoenix$CustomKryoRegistrator`
-     */
-    class CustomKryoRegistrator extends KryoRegistrator {
-        override def registerClasses(kryo: Kryo): Unit = {
-            kryo.register(classOf[ImmutableBytesWritable])
-        }
     }
 }

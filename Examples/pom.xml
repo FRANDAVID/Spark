@@ -15,7 +15,7 @@
       <scala.version>2.10.4</scala.version>
   </properties>
 
-    <repositories>
+    <repositories><!--
         <repository>
             <id>third party</id>
             <url>http://ecs5.njzd.com:8081/nexus/content/repositories/thirdparty/</url>
@@ -39,6 +39,10 @@
         <repository>
             <id>cloudera snapshots</id>
             <url>http://ecs5.njzd.com:8081/nexus/content/repositories/cloudera-snapshots/</url>
+        </repository> -->
+        <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
         </repository>
     </repositories>
 
@@ -68,7 +72,7 @@
       <dependency>
           <groupId>org.apache.spark</groupId>
           <artifactId>spark-core_2.10</artifactId>
-          <version>1.1.0-cdh5.2.1</version>
+          <version>1.2.0-cdh5.3.5</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
@@ -80,7 +84,7 @@
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-common</artifactId>
-          <version>2.5.0-cdh5.2.1</version>
+          <version>2.5.0-cdh5.3.5</version>
           <scope>provided</scope>
       </dependency>
       <!-- 以上三个包必须要，否则编译时会出现问题  -->
@@ -93,17 +97,17 @@
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-mapreduce-client-app</artifactId>
-          <version>2.5.0-cdh5.2.5</version>
+          <version>2.5.0-cdh5.3.5</version>
       </dependency>
       <dependency>
           <groupId>org.apache.hbase</groupId>
           <artifactId>hbase-server</artifactId>
-          <version>0.98.6-cdh5.2.0</version>
+          <version>0.98.6-cdh5.3.5</version>
       </dependency>
       <dependency>
           <groupId>com.esotericsoftware</groupId>
           <artifactId>kryo</artifactId>
-          <version>3.0.0</version>
+          <version>3.0.2</version>
       </dependency>
       <dependency>
           <groupId>com.sematext.hbasewd</groupId>
@@ -124,6 +128,23 @@
                             <goal>compile</goal>
                             <goal>testCompile</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals><goal>add-source</goal></goals>
+                        <configuration>
+                            <sources>
+                                <!-- <source>src/main/java</source> -->
+                                <!-- enable us to compile Java files inside `Scala` directory -->
+                                <source>src/main/scala</source>
+                            </sources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -1,13 +1,12 @@
-package cn.gridx.spark.examples
+package cn.gridx.spark.examples.io
 
 import java.io._
 
-import org.apache.hadoop.io.{Text, LongWritable}
+import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.hadoop.mapreduce.Job
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.spark.SparkContext._
+import org.apache.spark.{SparkConf, SparkContext}
 
 /**
  * Created by tao on 7/1/15.
