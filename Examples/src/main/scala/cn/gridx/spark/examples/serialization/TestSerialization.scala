@@ -15,11 +15,11 @@ object TestSerialization {
         val rdd = sc.parallelize(1 to 10000, 4)
 
         rdd.map(i => new UnserializableJavaClass("I'm `UnserializableJavaClass`", Bytes.toBytes("Hello `UnserializableJavaClass`"), i))
-            .map(x => (x.n%2, x))
+            .map(x => (x.n, x))
             .coalesce(100, true)
             .reduceByKey((a, b) => new UnserializableJavaClass("After", Bytes.toBytes("`reduceByKey`"), a.n + b.n))
             .collect
-            .foreach(println)
+            .foreach(x => {Thread.sleep(2000); println(x)})
 
         sc.stop
     }
