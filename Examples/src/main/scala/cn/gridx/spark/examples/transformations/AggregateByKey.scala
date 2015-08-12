@@ -1,10 +1,9 @@
-package cn.gridx.spark.examples.rdd
-
+package cn.gridx.spark.examples.transformations
 
 import org.apache.log4j.{Level, Logger}
+import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{Partitioner, SparkConf, SparkContext}
-import org.apache.spark.SparkContext._
 
 import scala.collection.mutable.ListBuffer
 
